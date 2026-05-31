@@ -1,4 +1,4 @@
-# ChainLearn 🚀
+# ChainLearn 
 
 An interactive blockchain learning platform designed to visually demonstrate the core concepts of block mining, transactions, consensus, and cryptographic verification.
 
