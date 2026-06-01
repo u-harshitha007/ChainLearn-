@@ -1,4 +1,4 @@
-# ChainLearn
+# blockchain mini project 
 
 A hands-on blockchain learning project built from scratch using Python to help students understand how blockchains work through practical implementation.
 
