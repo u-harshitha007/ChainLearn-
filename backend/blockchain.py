@@ -116,8 +116,39 @@ class Blockchain:
         # 6. Append the newly created block to our list (chain).
         self.chain.append(new_block)
 
+    def is_valid(self):
+        """
+        Validates the integrity of the blockchain.
+        
+        This method checks two critical rules for every block starting from index 1:
+        1. Whether the stored block hash matches the recalculated hash of its current content.
+        2. Whether the block's 'previous_hash' matches the actual hash of the block before it.
+        """
+        # Start checking from the second block (index 1) because the first block (index 0) 
+        # is the Genesis Block and has no previous block to link to.
+        for i in range(1, len(self.chain)):
+            current_block = self.chain[i]
+            previous_block = self.chain[i - 1]
+            
+            # Rule 1: Verify the block's data hasn't been tampered with.
+            # We recalculate the hash of the current block based on its contents and compare it 
+            # to the hash stored on the block itself. If they don't match, data was changed!
+            if current_block.hash != current_block.calculate_hash():
+                print(f"Validation Error: Block #{current_block.index} content has been modified.")
+                return False
+                
+            # Rule 2: Verify the chain link is intact.
+            # We compare the current block's previous_hash to the preceding block's actual hash.
+            # If they don't match, the link in the chain is broken!
+            if current_block.previous_hash != previous_block.hash:
+                print(f"Validation Error: The link between Block #{previous_block.index} and Block #{current_block.index} is broken.")
+                return False
+                
+        # If the loop finishes without returning False, it means every block is integral and correctly linked.
+        return True
 
-# Test section to demonstrate how the blockchain connects blocks
+
+# Test section to demonstrate validation and tamper-detection
 if __name__ == '__main__':
     print("=" * 60)
     print("Initializing ChainLearn Blockchain...")
@@ -137,3 +168,16 @@ if __name__ == '__main__':
         print(f"  Previous Hash: {block.previous_hash}")
         print(f"  Hash:          {block.hash}")
         print("-" * 60)
+        
+    # 4. Check if the blockchain is valid right after creation.
+    print(f"Blockchain Valid: {blockchain.is_valid()}")
+    print("=" * 60)
+    
+    # 5. Intentionally tamper with a block's data.
+    print("TEMPERING: Changing Block #1's data from 'Harshitha learned Python' to 'Harshitha learned Hacking'...")
+    blockchain.chain[1].data = "Harshitha learned Hacking"
+    print("-" * 60)
+    
+    # 6. Run validation again to check if the tamper is detected.
+    print(f"Blockchain Valid: {blockchain.is_valid()}")
+    print("=" * 60)
