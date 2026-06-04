@@ -2,6 +2,10 @@
 # FastAPI is the core framework we use to build our web API.
 from fastapi import FastAPI
 
+# Import BaseModel from pydantic.
+# Pydantic is used by FastAPI for data validation and parsing.
+from pydantic import BaseModel
+
 # Import the Blockchain class from blockchain.py.
 # Since blockchain.py is in the same directory, we can import it directly.
 from blockchain import Blockchain
@@ -14,12 +18,23 @@ app = FastAPI()
 # This will hold the chain list in server memory and automatically create the Genesis Block.
 blockchain = Blockchain()
 
-# 3. Define a route for the home page (root directory).
+# 3. Create a Pydantic model to define the expected structure of incoming POST data.
+#
+# CONCEPT: What BaseModel does
+# A Pydantic BaseModel defines a schema for the input data. It specifies the fields,
+# their data types, and whether they are required. In this case, we require a field
+# named 'data' that must be a string. If a client sends data that doesn't match this schema,
+# Pydantic automatically catches the error and rejects the request with a helpful error message.
+class BlockData(BaseModel):
+    data: str
+
+
+# 4. Define a route for the home page (root directory).
 # The '@app.get("/")' decorator tells FastAPI that when a client makes a GET request
 # to the root URL ("/"), it should execute the 'read_root' function below.
 @app.get("/")
 def read_root():
-    # 4. Return a dictionary.
+    # Return a dictionary.
     # FastAPI automatically converts Python dictionaries into JSON format before sending them back.
     return {"message": "Welcome to ChainLearn"}
 
@@ -30,19 +45,6 @@ def read_root():
 def get_chain():
     """
     Returns the complete list of blocks in the blockchain.
-    
-    CRITICAL CRYPTOGRAPHIC AND WEB CONCEPTS:
-    1. Why FastAPI cannot directly return Python objects:
-       FastAPI communicates with web browsers and external clients using HTTP, which transfers 
-       raw text. Custom Python objects (like instances of our 'Block' class) are binary data stored 
-       in Python's computer memory. Browsers cannot interpret Python's internal memory layout.
-       Therefore, the server must serialize (convert) the data into a universal format like JSON.
-       
-    2. Why we convert blocks into dictionaries:
-       A Python dictionary is a built-in data type structured as key-value pairs (e.g., {"index": 0}).
-       FastAPI contains built-in tools that know exactly how to translate standard Python dictionaries 
-       and lists into standard JSON strings. By converting our list of Block objects into a list of 
-       dictionaries, we prepare the data so FastAPI can seamlessly serialize it and send it to the client.
     """
     chain_data = []
     
@@ -58,6 +60,34 @@ def get_chain():
         })
         
     return chain_data
+
+
+# 6. Define a route to add a new block to the blockchain.
+# The '@app.post("/add")' decorator tells FastAPI to route POST requests here.
+@app.post("/add")
+def add_block(request: BlockData):
+    """
+    Creates a new block and appends it to the blockchain.
+    
+    CRITICAL CRYPTOGRAPHIC AND WEB CONCEPTS:
+    1. Why POST is used instead of GET:
+       GET requests are used solely to fetch or retrieve information from a server. They should not
+       modify any state. POST requests are designed to submit data to the server to create or modify
+       resources (in this case, appending a new block to our blockchain).
+       
+    2. How JSON becomes a Python object:
+       When a client sends a POST request with a JSON body (e.g., {"data": "..."}), FastAPI reads the 
+       raw JSON text stream, parses it, and maps the keys/values onto our 'BlockData' Pydantic model. 
+       This results in a clean Python object ('request') where we can access fields using dot notation 
+       (e.g., 'request.data').
+       
+    3. Why FastAPI calls blockchain.add_block():
+       To keep the database/blockchain state updated, FastAPI invokes the core domain logic: 
+       'blockchain.add_block()'. This method calculates the new block's index, records the current 
+       timestamp, retrieves the previous block's hash, and appends the new block securely to our chain.
+    """
+    blockchain.add_block(request.data)
+    return {"message": "Block added successfully"}
 
 
 # ==============================================================================
