@@ -1,2 +1,2 @@
-# ChainLearn - Python Dependencies
-# Lists all the Python libraries required to run the backend API server and core blockchain code.
+fastapi>=0.100.0
+uvicorn>=0.22.0
