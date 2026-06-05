@@ -1,20 +1,19 @@
-# ChainLearn 🚀
-### Premium Interactive 3D Blockchain Learning Platform
-
-> *"Understand the core principles of Blockchain within 30 seconds of launching."*
+# ChainLearn 
+###  Interactive Blockchain Learning Platform
+ 
 
 ChainLearn is a state-of-the-art educational playground designed to teach the fundamentals of block structures, cryptographic hashing, peer-to-peer link verification, and tamper detection. Built using a robust **FastAPI** backend and an immersive **React + Vite + Three.js (React Three Fiber) + Tailwind CSS v4** frontend, ChainLearn visually demonstrates how blockchains maintain integrity without central authorities.
 
 ---
 
-## 📸 Interface Preview (Conceptual Layout)
+##  Interface Preview (Conceptual Layout)
 
 ```
 +--------------------------------------------------------------------------------+
 |  [SHIELD] ChainLearn   v1.0.0               [ ● Connected to FastAPI Server ]  |
 +--------------------------------------------------------------------------------+
 |                                                                                |
-|          MASTER BLOCKCHAIN INTEGRITY IN 30 SECONDS                             |
+|                           |
 |          Interact with block nodes below. Edit data, witness hashes, break links. |
 |                                                                                |
 |  +--------------------------------------------------------------------------+  |
@@ -42,7 +41,7 @@ ChainLearn is a state-of-the-art educational playground designed to teach the fu
 
 ---
 
-## 🛠️ Architecture Diagram
+##  Architecture Diagram
 
 ChainLearn splits concerns between a Python ledger validation database and a React Three-dimensional client-side renderer.
 
@@ -68,7 +67,7 @@ ChainLearn splits concerns between a Python ledger validation database and a Rea
 
 ---
 
-## ✨ Features
+##  Features
 
 - **3D Interactive Blockchain Visualizer**: Pan, rotate, zoom, and interact with glassmorphic 3D blocks.
 - **Real-Time Data Tampering Demo**: Modify transactions directly inside a 3D block. Watch the block hash recalculate instantly, triggering downstream chain breakage indicators (links turn red).
@@ -99,7 +98,7 @@ The backend exposes a lightweight REST API running on port `8000`:
 
 ---
 
-## 🚀 Installation & Setup
+##  Installation & Setup
 
 ### Prerequisites
 - Node.js (v18.0.0+)
@@ -135,7 +134,7 @@ The React application will launch at `http://localhost:5173`.
 
 ---
 
-## 🎓 Learning Outcomes
+##  Learning Outcomes
 
 By working with ChainLearn, students will be able to answer:
 1. **How does hashing secure a block?** They will witness how a block's index, data, and previous hash form a single immutable signature.
@@ -145,7 +144,7 @@ By working with ChainLearn, students will be able to answer:
 
 ---
 
-## 🔮 Future Scope
+## Future Scope
 
 - **Proof of Work (PoW) Demo**: Add a visual slider to control block difficulty and show miners computing nonces.
 - **Distributed Node Consensus Simulator**: Simulate three side-by-side servers voting to overwrite or accept a ledger update.
