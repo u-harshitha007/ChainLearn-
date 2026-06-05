@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-heading: "Space Grotesk", "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Vault palette */
+  --color-vault-black: #050505;
+  --color-vault-surface: #0c0808;
+  --color-vault-card: #140a0a;
+  --color-vault-card-hover: #1c0e0e;
+  --color-vault-border: #2a1515;
+  --color-vault-border-light: #3d2020;
+
+  --color-crimson: #dc2626;
+  --color-crimson-dark: #991b1b;
+  --color-crimson-glow: rgba(220, 38, 38, 0.15);
+
+  --color-copper: #c2884d;
+  --color-copper-dark: #92400e;
+  --color-copper-muted: #a16a3d;
+
+  --color-amber: #d97706;
+  --color-amber-dim: #92400e;
+
+  --color-maroon: #7f1d1d;
+  --color-maroon-deep: #450a0a;
+}
+
+/* ─── Vault card surfaces ─── */
+@utility vault-card {
+  background: #140a0a;
+  border: 1px solid #2a1515;
+}
+
+@utility vault-card-elevated {
+  background: #1a0e0e;
+  border: 1px solid #2a1515;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(42, 21, 21, 0.3);
+}
+
+@utility vault-card-crimson {
+  background: #1a0808;
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  box-shadow: 0 4px 24px rgba(220, 38, 38, 0.06);
+}
+
+@utility vault-card-copper {
+  background: #140e08;
+  border: 1px solid rgba(194, 136, 77, 0.2);
+  box-shadow: 0 4px 24px rgba(194, 136, 77, 0.06);
+}
+
+@utility vault-card-secure {
+  background: #0a1008;
+  border: 1px solid rgba(34, 197, 94, 0.15);
+  box-shadow: 0 4px 24px rgba(34, 197, 94, 0.04);
+}
+
+@utility vault-card-danger {
+  background: #1a0505;
+  border: 1px solid rgba(220, 38, 38, 0.35);
+  box-shadow: 0 4px 24px rgba(220, 38, 38, 0.1);
+}
+
+/* ─── Text glows ─── */
+@utility text-glow-crimson {
+  text-shadow: 0 0 12px rgba(220, 38, 38, 0.4);
+}
+
+@utility text-glow-copper {
+  text-shadow: 0 0 12px rgba(194, 136, 77, 0.4);
+}
+
+@utility text-glow-amber {
+  text-shadow: 0 0 12px rgba(217, 119, 6, 0.4);
+}
+
+@utility text-glow-green {
+  text-shadow: 0 0 10px rgba(34, 197, 94, 0.35);
+}
+
+@utility text-glow-red {
+  text-shadow: 0 0 12px rgba(220, 38, 38, 0.5);
+}
+
+/* ─── Scrollbars ─── */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a1515;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3d2020;
+}
+
+/* ─── Base ─── */
+body {
+  font-family: var(--font-sans);
+  background-color: #050505;
+  color: #d4d4d4;
+  min-height: 100vh;
+  margin: 0;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Vault background texture ─── */
+.vault-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -10;
+  background-color: #050505;
+  background-image:
+    radial-gradient(ellipse at 15% 15%, rgba(127, 29, 29, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 85%, rgba(146, 64, 14, 0.04) 0%, transparent 50%);
+  overflow: hidden;
+}
+
+/* Subtle scan lines for vault feel */
+.vault-scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -9;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.008) 2px,
+    rgba(255, 255, 255, 0.008) 4px
+  );
+}
+
+/* ─── Animations ─── */
+@keyframes border-pulse-crimson {
+  0%, 100% {
+    border-color: rgba(220, 38, 38, 0.15);
+  }
+  50% {
+    border-color: rgba(220, 38, 38, 0.45);
+  }
+}
+
+@keyframes subtle-glow {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-border-pulse-crimson {
+  animation: border-pulse-crimson 3s infinite ease-in-out;
+}
+
+.animate-subtle-glow {
+  animation: subtle-glow 4s infinite ease-in-out;
+}

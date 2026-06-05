@@ -1,6 +1,7 @@
 # 1. Import the FastAPI class from the fastapi library.
 # FastAPI is the core framework we use to build our web API.
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 # Import BaseModel from pydantic.
 # Pydantic is used by FastAPI for data validation and parsing.
@@ -13,6 +14,16 @@ from blockchain import Blockchain
 # 2. Create an instance of the FastAPI class.
 # This 'app' object will be the main entry point to configure routes and run our server.
 app = FastAPI()
+
+# Configure CORS middleware to allow the React frontend (running on http://localhost:5173 or other origins)
+# to communicate with the FastAPI server securely.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Create a single global instance of our Blockchain class.
 # This will hold the chain list in server memory and automatically create the Genesis Block.
@@ -88,6 +99,31 @@ def add_block(request: BlockData):
     """
     blockchain.add_block(request.data)
     return {"message": "Block added successfully"}
+
+
+# 7. Define a route to validate the entire blockchain.
+@app.get("/validate")
+def validate_chain():
+    """
+    Checks the validity of the blockchain and returns the result.
+    """
+    return {"valid": blockchain.is_valid()}
+
+
+# 8. Define a route to tamper with a block's data on the server.
+class TamperData(BaseModel):
+    index: int
+    data: str
+
+@app.post("/tamper")
+def tamper_block(request: TamperData):
+    """
+    Intentionally modifies the data of a block in the chain to demonstrate validation.
+    """
+    if 0 <= request.index < len(blockchain.chain):
+        blockchain.chain[request.index].data = request.data
+        return {"message": f"Block #{request.index} data has been tampered successfully"}
+    return {"message": "Invalid block index", "error": True}
 
 
 # ==============================================================================
