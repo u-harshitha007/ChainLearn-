@@ -156,7 +156,12 @@ By working with ChainLearn, students will be able to answer:
 ---
 
 ## Future Scope
+ 
 
-- **Proof of Work (PoW) Demo**: Add a visual slider to control block difficulty and show miners computing nonces.
-- **Distributed Node Consensus Simulator**: Simulate three side-by-side servers voting to overwrite or accept a ledger update.
-- **Cryptography Explainer (Merkle Trees)**: Visually show how multiple transactions in a block roll up into a single Merkle Root hash.
+* Proof-of-Work (PoW) Mining Simulator
+* Distributed Blockchain Network & Consensus
+* Merkle Tree Visualization
+* Smart Contract Playground
+* Blockchain Attack Simulator
+* Persistent Database Storage
+
