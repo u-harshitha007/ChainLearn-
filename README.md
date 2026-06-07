@@ -98,6 +98,16 @@ The backend exposes a lightweight REST API running on port `8000`:
 | **POST** | `/tamper` | Mutates backend block data (for teaching) | Request: `{"index": 1, "data": "Tampered data"}` |
 
 ---
+## Live Demo
+
+Frontend:
+https://chain-learn.vercel.app
+
+Backend API:
+https://chainlearn-api.onrender.com
+
+API Docs:
+https://chainlearn-api.onrender.com/docs
 
 ##  Installation & Setup
 
