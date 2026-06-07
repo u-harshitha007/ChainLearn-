@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", system-ui, sans-serif;
-  --font-heading: "Space Grotesk", "Inter", sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: "IBM Plex Mono", "JetBrains Mono", ui-monospace, monospace;
+  --font-heading: "IBM Plex Mono", "JetBrains Mono", ui-monospace, monospace;
+  --font-mono: "IBM Plex Mono", "JetBrains Mono", ui-monospace, monospace;
 
   /* Vault palette */
-  --color-vault-black: #050505;
-  --color-vault-surface: #0c0808;
-  --color-vault-card: #140a0a;
-  --color-vault-card-hover: #1c0e0e;
+  --color-vault-black: #080606;
+  --color-vault-surface: #0e0808;
+  --color-vault-card: #120B0B;
+  --color-vault-card-hover: #181010;
   --color-vault-border: #2a1515;
   --color-vault-border-light: #3d2020;
 
-  --color-crimson: #dc2626;
+  --color-crimson: #DC2626;
   --color-crimson-dark: #991b1b;
   --color-crimson-glow: rgba(220, 38, 38, 0.15);
 
@@ -21,29 +21,30 @@
   --color-copper-dark: #92400e;
   --color-copper-muted: #a16a3d;
 
-  --color-amber: #d97706;
+  --color-amber: #D97706;
   --color-amber-dim: #92400e;
 
-  --color-maroon: #7f1d1d;
+  --color-maroon: #7A1F1F;
+  --color-maroon-mid: #A52A2A;
   --color-maroon-deep: #450a0a;
 }
 
 /* ─── Vault card surfaces ─── */
 @utility vault-card {
-  background: #140a0a;
+  background: #120B0B;
   border: 1px solid #2a1515;
 }
 
 @utility vault-card-elevated {
-  background: #1a0e0e;
+  background: #181010;
   border: 1px solid #2a1515;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(42, 21, 21, 0.3);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(42, 21, 21, 0.4);
 }
 
 @utility vault-card-crimson {
   background: #1a0808;
-  border: 1px solid rgba(220, 38, 38, 0.2);
-  box-shadow: 0 4px 24px rgba(220, 38, 38, 0.06);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  box-shadow: 0 4px 24px rgba(220, 38, 38, 0.08);
 }
 
 @utility vault-card-copper {
@@ -54,61 +55,70 @@
 
 @utility vault-card-secure {
   background: #0a1008;
-  border: 1px solid rgba(34, 197, 94, 0.15);
-  box-shadow: 0 4px 24px rgba(34, 197, 94, 0.04);
+  border: 1px solid rgba(16, 185, 129, 0.18);
+  box-shadow: 0 4px 24px rgba(16, 185, 129, 0.05);
 }
 
 @utility vault-card-danger {
   background: #1a0505;
-  border: 1px solid rgba(220, 38, 38, 0.35);
-  box-shadow: 0 4px 24px rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.4);
+  box-shadow: 0 4px 24px rgba(220, 38, 38, 0.12);
+}
+
+/* glass = vault-card-elevated alias used throughout existing JSX */
+@utility glass {
+  background: #161010;
+  border: 1px solid #2a1515;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+@utility glass-dark {
+  background: #0e0909;
+  border: 1px solid #2a1515;
+  box-shadow: 0 6px 32px rgba(0, 0, 0, 0.7);
 }
 
 /* ─── Text glows ─── */
 @utility text-glow-crimson {
-  text-shadow: 0 0 12px rgba(220, 38, 38, 0.4);
-}
-
-@utility text-glow-copper {
-  text-shadow: 0 0 12px rgba(194, 136, 77, 0.4);
-}
-
-@utility text-glow-amber {
-  text-shadow: 0 0 12px rgba(217, 119, 6, 0.4);
-}
-
-@utility text-glow-green {
-  text-shadow: 0 0 10px rgba(34, 197, 94, 0.35);
-}
-
-@utility text-glow-red {
   text-shadow: 0 0 12px rgba(220, 38, 38, 0.5);
 }
 
+@utility text-glow-copper {
+  text-shadow: 0 0 12px rgba(194, 136, 77, 0.5);
+}
+
+@utility text-glow-amber {
+  text-shadow: 0 0 14px rgba(217, 119, 6, 0.55);
+}
+
+@utility text-glow-green {
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+@utility text-glow-red {
+  text-shadow: 0 0 12px rgba(220, 38, 38, 0.6);
+}
+
+@utility text-glow-blue {
+  text-shadow: 0 0 12px rgba(122, 31, 31, 0.5);
+}
+
+@utility text-glow-purple {
+  text-shadow: 0 0 16px rgba(217, 119, 6, 0.45);
+}
+
 /* ─── Scrollbars ─── */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-::-webkit-scrollbar-track {
-  background: #050505;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #2a1515;
-  border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #3d2020;
-}
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #080606; }
+::-webkit-scrollbar-thumb { background: #2a1515; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #7A1F1F; }
 
 /* ─── Base ─── */
 body {
   font-family: var(--font-sans);
-  background-color: #050505;
-  color: #d4d4d4;
+  background-color: #080606;
+  color: #c8b8b8;
   min-height: 100vh;
   margin: 0;
 }
@@ -120,62 +130,77 @@ body {
   flex-direction: column;
 }
 
-/* ─── Vault background texture ─── */
-.vault-bg {
+/* ─── Vault background ─── */
+.vault-bg, .cyber-bg {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   z-index: -10;
-  background-color: #050505;
+  background-color: #080606;
   background-image:
-    radial-gradient(ellipse at 15% 15%, rgba(127, 29, 29, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 85% 85%, rgba(146, 64, 14, 0.04) 0%, transparent 50%);
+    radial-gradient(ellipse at 10% 10%, rgba(122, 31, 31, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse at 90% 90%, rgba(146, 64, 14, 0.05) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(217, 119, 6, 0.02) 0%, transparent 60%);
   overflow: hidden;
 }
 
-/* Subtle scan lines for vault feel */
+/* Scan lines — vault CRT feel */
 .vault-scanlines {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   z-index: -9;
   pointer-events: none;
   background: repeating-linear-gradient(
     0deg,
     transparent,
     transparent 2px,
-    rgba(255, 255, 255, 0.008) 2px,
-    rgba(255, 255, 255, 0.008) 4px
+    rgba(255, 255, 255, 0.006) 2px,
+    rgba(255, 255, 255, 0.006) 4px
   );
+}
+
+/* cyber-grid — referenced in App.jsx, replaced with ledger grid */
+.cyber-grid {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: -9;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(122,31,31,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(122,31,31,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
 /* ─── Animations ─── */
 @keyframes border-pulse-crimson {
-  0%, 100% {
-    border-color: rgba(220, 38, 38, 0.15);
-  }
-  50% {
-    border-color: rgba(220, 38, 38, 0.45);
-  }
+  0%, 100% { border-color: rgba(220, 38, 38, 0.18); }
+  50%       { border-color: rgba(220, 38, 38, 0.5);  }
+}
+
+@keyframes border-pulse-amber {
+  0%, 100% { border-color: rgba(217, 119, 6, 0.2); }
+  50%       { border-color: rgba(217, 119, 6, 0.6); }
 }
 
 @keyframes subtle-glow {
-  0%, 100% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 0.7;
-  }
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 0.75; }
 }
 
-.animate-border-pulse-crimson {
-  animation: border-pulse-crimson 3s infinite ease-in-out;
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
 }
 
-.animate-subtle-glow {
-  animation: subtle-glow 4s infinite ease-in-out;
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
+
+.animate-border-pulse-crimson  { animation: border-pulse-crimson 3s infinite ease-in-out; }
+.animate-border-pulse-amber    { animation: border-pulse-amber   3s infinite ease-in-out; }
+.animate-subtle-glow           { animation: subtle-glow 4s infinite ease-in-out; }
+.animate-pulse-slow            { animation: pulse-slow 3s infinite ease-in-out; }
+.animate-spin-slow             { animation: spin-slow 2s linear infinite; }

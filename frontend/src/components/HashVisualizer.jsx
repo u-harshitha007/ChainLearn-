@@ -6,9 +6,8 @@ export default function HashVisualizer() {
   const [inputData, setInputData] = useState('Blockchain Fundamentals');
   const [hash, setHash] = useState('');
   
-  // Avalanche Demo States
   const [inputA, setInputA] = useState('Bitcoin');
-  const [inputB, setInputB] = useState('Bitcoim'); // 1 letter difference
+  const [inputB, setInputB] = useState('Bitcoim');
   const [hashA, setHashA] = useState('');
   const [hashB, setHashB] = useState('');
   
@@ -30,39 +29,45 @@ export default function HashVisualizer() {
     computeAvalancheHashes();
   }, [inputA, inputB]);
 
-  // Function to highlight differences in hashes for avalanche demonstration
   const renderComparedHashes = () => {
     if (!hashA || !hashB) return null;
     
-    // Group characters to fit nicely on screen
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
-        <div className="bg-black/40 border border-white/5 rounded-xl p-3">
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-[10px] text-cyan-400 font-bold uppercase tracking-wider font-mono">INPUT A</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+        {/* Input A */}
+        <div className="rounded-sm p-3" style={{ background: '#0e0808', border: '1px solid rgba(42,21,21,0.8)' }}>
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-[9px] text-[#A52A2A] font-mono font-bold uppercase tracking-[0.25em]">
+              INPUT A
+            </span>
             <input 
               type="text" 
               value={inputA} 
               onChange={(e) => setInputA(e.target.value)}
-              className="bg-white/5 border border-white/10 rounded px-2 py-0.5 text-xs text-white focus:outline-none focus:border-cyan-500 font-mono w-28 text-right"
+              className="bg-[#080606] border border-[#2a1515] rounded-sm px-2 py-0.5 text-xs text-[#d0b0b0] focus:outline-none focus:border-[#A52A2A]/60 font-mono w-28 text-right"
             />
           </div>
-          <div className="font-mono text-xs break-all bg-black/30 p-2 rounded text-cyan-200 select-all border border-cyan-950">
+          <div className="font-mono text-[10px] break-all p-2 rounded-sm select-all text-[#D97706]"
+               style={{ background: '#080606', border: '1px solid rgba(217,119,6,0.15)', wordBreak: 'break-all' }}>
             {hashA}
           </div>
         </div>
 
-        <div className="bg-black/40 border border-white/5 rounded-xl p-3">
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-[10px] text-pink-400 font-bold uppercase tracking-wider font-mono">INPUT B (1 letter diff)</span>
+        {/* Input B */}
+        <div className="rounded-sm p-3" style={{ background: '#0e0808', border: '1px solid rgba(42,21,21,0.8)' }}>
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-[9px] text-[#DC2626] font-mono font-bold uppercase tracking-[0.25em]">
+              INPUT B — 1 char diff
+            </span>
             <input 
               type="text" 
               value={inputB} 
               onChange={(e) => setInputB(e.target.value)}
-              className="bg-white/5 border border-white/10 rounded px-2 py-0.5 text-xs text-white focus:outline-none focus:border-pink-500 font-mono w-28 text-right"
+              className="bg-[#080606] border border-[#2a1515] rounded-sm px-2 py-0.5 text-xs text-[#d0b0b0] focus:outline-none focus:border-[#DC2626]/60 font-mono w-28 text-right"
             />
           </div>
-          <div className="font-mono text-xs break-all bg-black/30 p-2 rounded text-pink-200 select-all border border-pink-950">
+          <div className="font-mono text-[10px] break-all p-2 rounded-sm select-all text-[#DC2626]"
+               style={{ background: '#080606', border: '1px solid rgba(220,38,38,0.15)', wordBreak: 'break-all' }}>
             {hashB}
           </div>
         </div>
@@ -72,50 +77,64 @@ export default function HashVisualizer() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      {/* Live Hashing Sandbox */}
-      <div className="lg:col-span-7 glass rounded-2xl p-6 border border-white/10 flex flex-col justify-between">
+
+      {/* ── Live Hashing Sandbox ── */}
+      <div className="lg:col-span-7 glass rounded-sm p-6 flex flex-col justify-between">
         <div>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="p-2 rounded-lg bg-cyan-950 border border-cyan-500/30 text-cyan-400">
-              <FiCpu className="w-5 h-5" />
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[9px] font-mono tracking-[0.3em] text-[#5a3a3a] uppercase">
+              Cryptographic Workstation
+            </span>
+          </div>
+          <div className="flex items-center gap-2 mb-5">
+            <div className="p-2 rounded-sm bg-[#1a0e08] border border-[#D97706]/25 text-[#D97706]">
+              <FiCpu className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white leading-tight">Live SHA-256 Hashing Sandbox</h3>
-              <p className="text-xs text-gray-400">See how raw text inputs transform into a secure digital fingerprint</p>
+              <h3 className="text-sm font-bold text-[#d0b0b0] font-mono tracking-wider uppercase">
+                SHA-256 Live Sandbox
+              </h3>
+              <p className="text-[10px] text-[#5a3a3a] font-mono">
+                Raw text → cryptographic fingerprint
+              </p>
             </div>
           </div>
 
-          {/* User Input */}
-          <div className="flex flex-col gap-1.5 mb-4">
-            <label className="text-xs text-gray-400 font-semibold">INPUT DATA</label>
+          {/* INPUT section */}
+          <div className="flex flex-col gap-1.5 mb-3">
+            <label className="text-[9px] text-[#5a3a3a] font-mono tracking-[0.25em] uppercase">
+              ① INPUT
+            </label>
             <textarea
               value={inputData}
               onChange={(e) => setInputData(e.target.value)}
               rows="3"
-              className="w-full bg-black/30 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500 font-mono resize-none transition-colors"
-              placeholder="Type anything here to see the SHA-256 hashing in action..."
+              className="w-full bg-[#0e0808] border border-[#2a1515] rounded-sm px-3 py-2.5 text-sm text-[#d0b0b0] focus:outline-none focus:border-[#A52A2A]/60 font-mono resize-none transition-colors placeholder:text-[#3a2020]"
+              placeholder="Enter any string to fingerprint..."
             />
-            <div className="flex justify-between items-center text-[10px] text-gray-500 font-mono">
+            <div className="flex justify-between items-center text-[9px] text-[#3a2020] font-mono tracking-wider">
               <span>LENGTH: {inputData.length} CHARS</span>
-              <span>TYPE: UTF-8 STRING</span>
+              <span>ENCODING: UTF-8</span>
             </div>
           </div>
 
-          {/* Flow Animation Arrow */}
-          <div className="flex justify-center items-center py-2 flex-col text-gray-600">
-            <FiChevronsDown className="w-6 h-6 animate-bounce text-cyan-500/50" />
-            <span className="text-[10px] text-cyan-500/60 font-bold font-mono tracking-widest mt-0.5">SHA-256 ALGORITHM</span>
+          {/* Flow indicator */}
+          <div className="flex justify-center items-center py-3 flex-col text-[#3a2020]">
+            <FiChevronsDown className="w-5 h-5 animate-bounce text-[#7A1F1F]" />
+            <span className="text-[9px] text-[#5a2a2a] font-mono font-bold tracking-[0.35em] mt-1 uppercase">
+              ② SHA-256 Transform
+            </span>
           </div>
 
-          {/* SHA-256 Output */}
-          <div className="flex flex-col gap-1.5 mt-2">
-            <label className="text-xs text-cyan-400 font-bold tracking-wider font-mono flex items-center gap-1">
-              <FiLock className="w-3.5 h-3.5" /> SECURED SHA-256 HASH
+          {/* OUTPUT section */}
+          <div className="flex flex-col gap-1.5 mt-1">
+            <label className="text-[9px] text-[#D97706] font-mono tracking-[0.25em] uppercase flex items-center gap-1">
+              <FiLock className="w-3 h-3" /> ③ OUTPUT — 256-bit fingerprint
             </label>
-            <div className="w-full bg-cyan-950/20 border border-cyan-500/30 rounded-xl p-4 font-mono text-sm break-all text-emerald-400 text-glow-green select-all relative overflow-hidden">
-              {/* Subtle back glowing badge */}
-              <div className="absolute right-2 bottom-1 text-[8px] text-cyan-500/20 font-bold uppercase tracking-widest pointer-events-none">
-                256-BIT SIGNATURE
+            <div className="w-full rounded-sm p-4 font-mono text-sm break-all text-[#10B981] text-glow-green select-all relative overflow-hidden"
+                 style={{ background: '#080f08', border: '1px solid rgba(16,185,129,0.2)', wordBreak: 'break-all' }}>
+              <div className="absolute right-2 bottom-1 text-[8px] text-[#10B981]/15 font-mono uppercase tracking-widest pointer-events-none">
+                256-BIT
               </div>
               {hash}
             </div>
@@ -123,35 +142,44 @@ export default function HashVisualizer() {
         </div>
       </div>
 
-      {/* Educational Concept - The Avalanche Effect */}
-      <div className="lg:col-span-5 glass rounded-2xl p-6 border border-white/10 flex flex-col justify-between">
+      {/* ── Avalanche Effect ── */}
+      <div className="lg:col-span-5 glass rounded-sm p-6 flex flex-col justify-between">
         <div>
-          <div className="flex items-center gap-2 mb-3">
-            <div className="p-2 rounded-lg bg-pink-950 border border-pink-500/30 text-pink-400">
-              <FiLock className="w-5 h-5" />
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[9px] font-mono tracking-[0.3em] text-[#5a3a3a] uppercase">
+              Cryptographic Property
+            </span>
+          </div>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-2 rounded-sm bg-[#1a0808] border border-[#DC2626]/25 text-[#DC2626]">
+              <FiLock className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white leading-tight">The Avalanche Effect</h3>
-              <p className="text-xs text-gray-400">A fundamental cryptographic rule of block validation</p>
+              <h3 className="text-sm font-bold text-[#d0b0b0] font-mono tracking-wider uppercase">
+                The Avalanche Effect
+              </h3>
+              <p className="text-[10px] text-[#5a3a3a] font-mono">
+                A core rule of hash validation
+              </p>
             </div>
           </div>
 
-          <div className="text-xs text-gray-300 leading-relaxed mb-4 flex flex-col gap-2">
+          <div className="text-[11px] text-[#7a5a5a] leading-relaxed mb-4 flex flex-col gap-2 font-mono">
             <p>
-              In secure hashing, a tiny change of just **one character** in the source data results in a **completely, unpredictably different hash output**.
+              A single character change produces a completely unpredictable output hash — no similarity preserved.
             </p>
             <p>
-              This is called the **Avalanche Effect**. It makes the blockchain tamper-proof because editing even a single character breaks all hashes downstream!
+              This property makes blockchain tamper-proof: editing one character cascades through every downstream hash.
             </p>
           </div>
 
-          {/* Render the live Avalanche comparison */}
           {renderComparedHashes()}
 
-          <div className="mt-4 flex items-start gap-2 bg-white/5 border border-white/5 rounded-xl p-3">
-            <FiInfo className="text-violet-400 w-4 h-4 mt-0.5 flex-shrink-0" />
-            <p className="text-[10px] text-gray-400 leading-normal">
-              Compare the two hashes above. Notice how changing a single character <code className="bg-black/30 text-white rounded px-1">n</code> to <code className="bg-black/30 text-white rounded px-1">m</code> completely alters the 64-char fingerprint. This prevents attackers from guessing changes.
+          <div className="mt-4 flex items-start gap-2 rounded-sm p-3"
+               style={{ background: '#0e0808', border: '1px solid rgba(42,21,21,0.6)' }}>
+            <FiInfo className="text-[#D97706] w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+            <p className="text-[10px] text-[#5a3a3a] leading-normal font-mono">
+              Changing <code className="bg-[#080606] text-[#d0b0b0] rounded-sm px-1">n</code> to <code className="bg-[#080606] text-[#d0b0b0] rounded-sm px-1">m</code> yields a wholly different 64-char fingerprint. Attackers cannot predict or reverse-engineer changes.
             </p>
           </div>
         </div>

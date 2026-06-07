@@ -1,38 +1,40 @@
 import React, { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
-import { FiEdit2, FiAlertTriangle, FiCheckCircle, FiCopy, FiInfo, FiTrash2, FiRefreshCw } from 'react-icons/fi';
+import { FiEdit2, FiAlertTriangle, FiCheckCircle, FiCopy, FiInfo, FiRefreshCw } from 'react-icons/fi';
 
-// A single block connection link (cylinder)
+// Chain link connector — amber metallic glow / red fracture
 function ChainLink({ startX, endX, isValid }) {
   const linkRef = useRef();
   
-  // Subtle glow animation
   useFrame((state) => {
     if (linkRef.current) {
       const time = state.clock.getElapsedTime();
-      const intensity = 0.5 + Math.sin(time * 3) * 0.2;
-      linkRef.current.material.emissiveIntensity = intensity;
+      // Amber pulse for valid, crimson strobe for broken
+      linkRef.current.material.emissiveIntensity = isValid
+        ? 0.4 + Math.sin(time * 2) * 0.2
+        : 0.7 + Math.sin(time * 8) * 0.3;
     }
   });
 
   const midX = (startX + endX) / 2;
-  const length = Math.abs(endX - startX) - 3.8; // subtract block widths
+  const length = Math.abs(endX - startX) - 3.8;
 
   return (
     <mesh position={[midX, 0, -0.2]} rotation={[0, 0, Math.PI / 2]} ref={linkRef}>
-      <cylinderGeometry args={[0.08, 0.08, length, 16]} />
+      <cylinderGeometry args={[0.07, 0.07, length, 12]} />
       <meshStandardMaterial
-        color={isValid ? "#10b981" : "#ef4444"}
-        emissive={isValid ? "#10b981" : "#ef4444"}
-        emissiveIntensity={0.6}
-        roughness={0.2}
+        color={isValid ? "#c2884d" : "#DC2626"}
+        emissive={isValid ? "#D97706" : "#DC2626"}
+        emissiveIntensity={isValid ? 0.5 : 0.8}
+        roughness={isValid ? 0.3 : 0.6}
+        metalness={isValid ? 0.7 : 0.1}
       />
     </mesh>
   );
 }
 
-// 3D Glass Block component
+// 3D Vault Block — archive record styling
 function BlockNode({ 
   block, 
   isGenesis, 
@@ -47,11 +49,11 @@ function BlockNode({
   const [hovered, setHovered] = useState(false);
   const [copiedHash, setCopiedHash] = useState(false);
 
-  // Gentle floating animation
+  // Subtle vault float — slower, more deliberate
   useFrame((state) => {
     if (meshRef.current) {
       const time = state.clock.getElapsedTime();
-      meshRef.current.position.y = Math.sin(time + block.index * 1.5) * 0.15;
+      meshRef.current.position.y = Math.sin(time * 0.8 + block.index * 1.5) * 0.1;
     }
   });
 
@@ -61,151 +63,177 @@ function BlockNode({
     setTimeout(() => setCopiedHash(false), 1500);
   };
 
-  // Determine border and glow colors
-  let cardClass = "border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.1)]";
+  // Card border / shadow
+  let cardStyle = {
+    border: '1px solid rgba(122,31,31,0.4)',
+    boxShadow: '0 0 12px rgba(122,31,31,0.1)',
+    background: '#120B0B',
+  };
   let statusBadge = (
-    <span className="flex items-center gap-1 text-[11px] font-medium text-emerald-400">
-      <FiCheckCircle className="w-3.5 h-3.5" /> Secure
+    <span className="flex items-center gap-1 text-[10px] font-mono text-[#10B981]">
+      <FiCheckCircle className="w-3 h-3" /> SEALED
     </span>
   );
 
   if (isTampered) {
-    cardClass = "border-red-500/70 shadow-[0_0_20px_rgba(239,68,68,0.3)] animate-pulse";
+    cardStyle = {
+      border: '1px solid rgba(220,38,38,0.7)',
+      boxShadow: '0 0 20px rgba(220,38,38,0.25)',
+      background: '#1a0505',
+      animation: 'border-pulse-crimson 1.5s infinite',
+    };
     statusBadge = (
-      <span className="flex items-center gap-1 text-[11px] font-bold text-red-400 animate-pulse text-glow-red">
-        <FiAlertTriangle className="w-3.5 h-3.5" /> Hash Changed
+      <span className="flex items-center gap-1 text-[10px] font-mono font-bold text-[#DC2626]"
+            style={{ textShadow: '0 0 8px rgba(220,38,38,0.6)' }}>
+        <FiAlertTriangle className="w-3 h-3" /> TAMPERED
       </span>
     );
   } else if (isChainBroken) {
-    cardClass = "border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.2)]";
+    cardStyle = {
+      border: '1px solid rgba(217,119,6,0.5)',
+      boxShadow: '0 0 16px rgba(217,119,6,0.15)',
+      background: '#120e05',
+    };
     statusBadge = (
-      <span className="flex items-center gap-1 text-[11px] font-medium text-amber-400">
-        <FiAlertTriangle className="w-3.5 h-3.5" /> Chain Broken
+      <span className="flex items-center gap-1 text-[10px] font-mono text-[#D97706]">
+        <FiAlertTriangle className="w-3 h-3" /> CHAIN BROKEN
       </span>
     );
   }
 
-  // Highlight block if selected in educational mode
   const isHighlighted = activeCardIndex !== null && (
-    (activeCardIndex === 0 && isGenesis) || // What is a block?
-    (activeCardIndex === 1 && hovered) || // Hashing
-    (activeCardIndex === 2 && block.index > 0) || // Previous Hash
-    (activeCardIndex === 3) // Validation
+    (activeCardIndex === 0 && isGenesis) ||
+    (activeCardIndex === 1 && hovered) ||
+    (activeCardIndex === 2 && block.index > 0) ||
+    (activeCardIndex === 3)
   );
 
-  if (isHighlighted) {
-    cardClass += " ring-2 ring-violet-500 ring-offset-4 ring-offset-gray-950 scale-105 transition-all duration-300";
-  }
+  // 3D block color — vault copper for normal, crimson for tampered
+  const blockColor = isTampered ? "#8B0000" : isChainBroken ? "#7a4a00" : hovered ? "#5a2a2a" : "#2a1515";
 
   return (
     <group position={[block.index * 5.8, 0, 0]}>
-      {/* 3D Glass block geometry */}
       <mesh
         ref={meshRef}
         onPointerOver={() => setHovered(true)}
         onPointerOut={() => setHovered(false)}
       >
-        <boxGeometry args={[4.2, 3.2, 0.8]} />
+        <boxGeometry args={[4.2, 3.2, 0.6]} />
         <meshPhysicalMaterial
-          color={isTampered ? "#ef4444" : isChainBroken ? "#f59e0b" : hovered ? "#a78bfa" : "#06b6d4"}
-          roughness={0.15}
-          metalness={0.1}
+          color={blockColor}
+          roughness={0.5}
+          metalness={0.6}
           transparent
-          opacity={hovered ? 0.35 : 0.25}
-          transmission={0.6}
-          thickness={1.2}
-          clearcoat={0.8}
+          opacity={hovered ? 0.85 : 0.75}
+          clearcoat={0.4}
+          clearcoatRoughness={0.3}
+          emissive={isTampered ? "#DC2626" : isChainBroken ? "#D97706" : "#7A1F1F"}
+          emissiveIntensity={isTampered ? 0.15 : isChainBroken ? 0.1 : 0.05}
         />
         
-        {/* HTML Billboard styled interface inside 3D space */}
         <Html
-          position={[0, 0, 0.42]}
+          position={[0, 0, 0.35]}
           center
           distanceFactor={10}
           style={{
-            width: '320px',
+            width: '290px',
             transform: 'translate3d(-50%, -50%, 0)',
             pointerEvents: 'auto',
+            fontFamily: '"IBM Plex Mono", "JetBrains Mono", monospace',
           }}
         >
-          <div className={`glass rounded-xl p-4 text-left font-sans select-none flex flex-col gap-2 transition-all duration-300 ${cardClass}`}>
-            {/* Block Header */}
-            <div className="flex justify-between items-center border-b border-white/10 pb-1.5">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs uppercase tracking-widest text-cyan-400 font-mono font-bold">
-                  {isGenesis ? "Genesis Block" : `Block #${block.index}`}
-                </span>
-              </div>
+          <div style={{ ...cardStyle, borderRadius: '2px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px', backdropFilter: 'blur(4px)', position: 'relative' }}
+               className={isHighlighted ? 'ring-2 ring-[#D97706] ring-offset-2 ring-offset-[#080606]' : ''}>
+            
+            {/* Block header — archive record label */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(42,21,21,0.6)', paddingBottom: '6px' }}>
+              <span style={{ fontSize: '10px', letterSpacing: '0.15em', color: '#A52A2A', fontWeight: 700, textTransform: 'uppercase' }}>
+                {isGenesis ? "GENESIS RECORD" : `RECORD #${block.index}`}
+              </span>
               {statusBadge}
             </div>
 
-            {/* Block Data Input Field (Tamper Mode) */}
-            <div className="flex flex-col gap-1">
-              <label className="text-[10px] text-gray-400 flex justify-between items-center">
-                <span>DATA (EDIT TO TAMPER)</span>
-                <span className="flex items-center gap-0.5 text-[9px] text-gray-500">
-                  <FiEdit2 className="w-2.5 h-2.5" /> interactive
+            {/* Data input */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+              <label style={{ fontSize: '9px', color: '#5a3a3a', letterSpacing: '0.2em', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between' }}>
+                <span>PAYLOAD</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#3a2020' }}>
+                  <FiEdit2 style={{ width: '9px', height: '9px' }} /> edit to tamper
                 </span>
               </label>
               <input
                 type="text"
                 value={block.data}
                 onChange={(e) => onDataChange(block.index, e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-cyan-500 font-mono"
-                placeholder="Enter block transactions..."
+                style={{
+                  width: '100%', background: 'rgba(8,6,6,0.8)', border: '1px solid rgba(42,21,21,0.8)',
+                  borderRadius: '2px', padding: '4px 8px', fontSize: '11px', color: '#d0b0b0',
+                  fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box',
+                }}
+                placeholder="Block payload..."
+                onFocus={e => e.target.style.borderColor = 'rgba(165,42,42,0.7)'}
+                onBlur={e => e.target.style.borderColor = 'rgba(42,21,21,0.8)'}
               />
             </div>
 
-            {/* Previous Hash Display */}
-            <div className="flex flex-col gap-0.5">
-              <span className="text-[10px] text-gray-400 uppercase">PREVIOUS HASH</span>
-              <div className="flex items-center justify-between gap-1 bg-black/30 border border-white/5 rounded px-2 py-1 font-mono text-[10px]">
-                <span className={isChainBroken ? "text-red-400 font-bold" : "text-gray-300"}>
-                  {isGenesis ? "0000 (First Block Link)" : block.previous_hash.slice(0, 18) + "..."}
+            {/* Prev hash */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <span style={{ fontSize: '9px', color: '#5a3a3a', letterSpacing: '0.2em', textTransform: 'uppercase' }}>PREV HASH</span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(8,6,6,0.6)', border: '1px solid rgba(42,21,21,0.5)', borderRadius: '2px', padding: '3px 6px', fontFamily: 'inherit' }}>
+                <span style={{ fontSize: '9px', color: isChainBroken ? '#DC2626' : '#7a5a5a', fontWeight: isChainBroken ? 700 : 400 }}>
+                  {isGenesis ? "0000 (origin)" : block.previous_hash.slice(0, 16) + "…"}
                 </span>
                 {!isGenesis && (
-                  <button 
-                    onClick={() => handleCopy(block.previous_hash)}
-                    className="text-gray-500 hover:text-cyan-400 transition-colors"
-                    title="Copy Full Hash"
-                  >
-                    <FiCopy className="w-3 h-3" />
+                  <button onClick={() => handleCopy(block.previous_hash)}
+                          style={{ color: '#3a2020', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                          onMouseEnter={e => e.target.style.color = '#D97706'}
+                          onMouseLeave={e => e.target.style.color = '#3a2020'}>
+                    <FiCopy style={{ width: '10px', height: '10px' }} />
                   </button>
                 )}
               </div>
             </div>
 
-            {/* Current Hash Display */}
-            <div className="flex flex-col gap-0.5">
-              <span className="text-[10px] text-gray-400 uppercase">BLOCK HASH</span>
-              <div className="flex items-center justify-between gap-1 bg-black/30 border border-white/5 rounded px-2 py-1 font-mono text-[10px]">
-                <span className={isTampered ? "text-red-400 font-bold" : "text-emerald-400"}>
-                  {block.hash.slice(0, 18) + "..."}
+            {/* Current hash */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <span style={{ fontSize: '9px', color: '#5a3a3a', letterSpacing: '0.2em', textTransform: 'uppercase' }}>SHA-256 HASH</span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(8,6,6,0.6)', border: '1px solid rgba(42,21,21,0.5)', borderRadius: '2px', padding: '3px 6px', fontFamily: 'inherit' }}>
+                <span style={{ fontSize: '9px', color: isTampered ? '#DC2626' : '#10B981', fontWeight: isTampered ? 700 : 400 }}>
+                  {block.hash.slice(0, 16) + "…"}
                 </span>
-                <button 
-                  onClick={() => handleCopy(block.hash)}
-                  className="text-gray-500 hover:text-cyan-400 transition-colors"
-                  title="Copy Full Hash"
-                >
-                  <FiCopy className="w-3 h-3" />
+                <button onClick={() => handleCopy(block.hash)}
+                        style={{ color: '#3a2020', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                        onMouseEnter={e => e.target.style.color = '#D97706'}
+                        onMouseLeave={e => e.target.style.color = '#3a2020'}>
+                  <FiCopy style={{ width: '10px', height: '10px' }} />
                 </button>
               </div>
             </div>
 
-            {/* Syc to Server button if data is modified locally */}
+            {/* Tamper to server */}
             {isTampered && onTamperBackend && (
               <button
                 onClick={() => onTamperBackend(block.index, block.data)}
-                className="w-full mt-1 py-1 rounded bg-red-950/70 border border-red-500/50 hover:bg-red-900/60 text-[10px] text-red-300 font-medium flex items-center justify-center gap-1 transition-all duration-200"
+                style={{
+                  width: '100%', padding: '5px', borderRadius: '2px',
+                  background: 'rgba(139,0,0,0.4)', border: '1px solid rgba(220,38,38,0.5)',
+                  color: '#f87171', fontSize: '9px', fontFamily: 'inherit', letterSpacing: '0.15em',
+                  textTransform: 'uppercase', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px'
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(180,0,0,0.5)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'rgba(139,0,0,0.4)'}
               >
-                <FiRefreshCw className="w-3 h-3 animate-spin-slow" /> Tamper Server Database
+                <FiRefreshCw style={{ width: '10px', height: '10px' }} /> Inject Tamper to Server
               </button>
             )}
 
-            {/* Copy Notification Toast inside card */}
             {copiedHash && (
-              <div className="absolute inset-0 bg-gray-950/90 rounded-xl flex items-center justify-center text-xs text-cyan-400 font-medium transition-all duration-300">
-                Copied hash to clipboard!
+              <div style={{
+                position: 'absolute', inset: 0, background: 'rgba(8,6,6,0.92)', borderRadius: '2px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '10px', color: '#D97706', fontFamily: 'inherit', letterSpacing: '0.2em'
+              }}>
+                HASH COPIED
               </div>
             )}
           </div>
@@ -227,12 +255,13 @@ export default function BlockchainVisualizer({
   const controlsRef = useRef();
 
   return (
-    <div className="w-full h-[450px] relative glass-dark rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
-      {/* 3D Instructions */}
-      <div className="absolute top-4 left-4 z-10 flex gap-4 pointer-events-none select-none">
-        <div className="glass px-3 py-1.5 rounded-lg border border-white/10 text-[11px] text-gray-400 flex items-center gap-1.5">
-          <FiInfo className="text-cyan-400 w-3.5 h-3.5" />
-          <span>Drag to Rotate • Right-click + Drag to Pan • Scroll to Zoom</span>
+    <div className="w-full h-[450px] relative rounded-sm border border-[#2a1515] overflow-hidden"
+         style={{ background: '#080606', boxShadow: '0 8px 40px rgba(0,0,0,0.8), inset 0 1px 0 rgba(122,31,31,0.1)' }}>
+      {/* Instructions badge */}
+      <div className="absolute top-3 left-3 z-10 pointer-events-none select-none">
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-[#2a1515] bg-[#0e0808]/80 text-[10px] text-[#5a3a3a] font-mono tracking-wider">
+          <FiInfo className="text-[#A52A2A] w-3 h-3" />
+          <span>Drag · Pan · Scroll to Zoom</span>
         </div>
       </div>
 
@@ -240,10 +269,11 @@ export default function BlockchainVisualizer({
         camera={{ position: [2.5, 0.5, 8.5], fov: 45 }}
         style={{ background: 'transparent' }}
       >
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} intensity={1.5} />
-        <pointLight position={[-10, -10, -10]} intensity={0.5} />
-        <directionalLight position={[0, 5, 5]} intensity={1} />
+        {/* Warm vault lighting — no cyan/blue */}
+        <ambientLight intensity={0.3} color="#c2884d" />
+        <pointLight position={[10, 10, 10]} intensity={1.2} color="#D97706" />
+        <pointLight position={[-10, -5, -10]} intensity={0.4} color="#7A1F1F" />
+        <directionalLight position={[0, 5, 5]} intensity={0.8} color="#ffffff" />
 
         <group position={[-(chain.length - 1) * 2.9, 0, 0]}>
           {chain.map((block, index) => {
@@ -253,7 +283,6 @@ export default function BlockchainVisualizer({
 
             return (
               <React.Fragment key={block.index}>
-                {/* Visual Block Representation */}
                 <BlockNode 
                   block={block}
                   isGenesis={isGenesis}
@@ -265,7 +294,6 @@ export default function BlockchainVisualizer({
                   setActiveCardIndex={setActiveCardIndex}
                 />
 
-                {/* Connection Cylinder between block i-1 and block i */}
                 {index > 0 && (
                   <ChainLink 
                     startX={(index - 1) * 5.8} 
